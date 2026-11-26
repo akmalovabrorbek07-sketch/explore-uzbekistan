@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>O‘zbekiston — Tarix, Madaniyat, Tabiat, San’at va Kelajak</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700;800&display=swap">
+  <style>
+    /* Rang o'zgaruvchilari va mavzu (yorug' / tungi) sozlamalari */
+    :root {
+      --bg: #f3f6fc;
+      --sf: #ffffff;
+      --sf-2: #eef2fa;
+      --tx: #0f172a;
+      --mu: #525d75;
+      --ln: rgba(15, 23, 42, 0.1);
+      --ac: #0284c7;
+      --ac2: #d97706;
+      --ag: linear-gradient(125deg, #0369a1 0%, #0ea5e9 52%, #f59e0b 100%);
+      --sh-sm: 0 8px 22px rgba(15, 23, 42, 0.06);
+      --sh-md: 0 20px 44px rgba(15, 23, 42, 0.12);
+      --sh-lg: 0 30px 66px rgba(2, 132, 199, 0.24);
+      --spring: cubic-bezier(0.22, 1, 0.36, 1);
+      --bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    body.dark {
+      --bg: #060a15;
+      --sf: #0d1426;
+      --sf-2: #141e36;
+      --tx: #f8fafc;
+      --mu: #94a3b8;
+      --ln: rgba(255, 255, 255, 0.1);
+      --ac: #38bdf8;
+      --ac2: #fbbf24;
+      --sh-sm: 0 8px 24px rgba(0, 0, 0, 0.36);
+      --sh-md: 0 22px 48px rgba(0, 0, 0, 0.52);
+      --sh-lg: 0 32px 68px rgba(14, 165, 233, 0.28);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--tx);
+      font: 16px/1.62 Manrope, system-ui, sans-serif;
+      overflow-x: hidden;
+      transition: background-color 0.45s var(--spring), color 0.3s ease;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: Unbounded, system-ui, sans-serif;
+      margin: 0;
+      line-height: 1.18;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--ac);
+      outline-offset: 2px;
+      border-radius: 8px;
+    }
+
+    /* Orqa fonda suzuvchi yorug'lik nurlari */
+    .bg-mesh {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(95px);
+      opacity: 0.36;
+      animation: floatOrb 15s ease-in-out infinite alternate;
+    }
+
+    .glow-1 {
+      width: 480px;
+      height: 480px;
+      top: -140px;
+      left: -120px;
+      background: #0ea5e9;
+    }
+
+    .glow-2 {
+      width: 420px;
+      height: 420px;
+      top: 35%;
+      right: -130px;
+      background: #f59e0b;
+      animation-delay: -6s;
+    }
+
+    .glow-3 {
+      width: 460px;
+      height: 460px;
+      bottom: -160px;
+      left: 28%;
+      background: #6366f1;
+      animation-delay: -11s;
+    }
+
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(48px, -28px) scale(1.1); }
+      100% { transform: translate(-30px, 36px) scale(0.95); }
+    }
+
+    @keyframes riseIn {
+      from {
+        opacity: 0;
+        transform: translateY(26px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes heroFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-9px); }
+    }
+
+    @keyframes tickerRun {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    @keyframes modalZoom {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 0.85; }
+      50% { transform: scale(1.35); opacity: 1; }
+    }
+
+    @keyframes shimmerSweep {
+      0% { transform: translateX(-160%) skewX(-22deg); }
+      60%, 100% { transform: translateX(260%) skewX(-22deg); }
+    }
+
+    @keyframes ornamentSpin {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(8deg) scale(1.06); }
+    }
+
+    /* Sahifa bo'ylab o'qish jarayoni chizig'i */
+    .scroll-progress {
+      position: fixed;
+      top: env(safe-area-inset-top, 0px);
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: var(--ag);
+      z-index: 40;
+      box-shadow: 0 0 12px rgba(14, 165, 233, 0.55);
+      transition: width 0.12s linear;
+      pointer-events: none;
+    }
+
+    /* Scroll paytida paydo bo'lish animatsiyasi */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.72s var(--spring), transform 0.72s var(--spring);
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Glassmorphism Header */
+    header {
+      position: sticky;
+      top: env(safe-area-inset-top, 0px);
+      z-index: 30;
+      background: color-mix(in srgb, var(--sf) 80%, transparent);
+      backdrop-filter: blur(18px) saturate(170%);
+      -webkit-backdrop-filter: blur(18px) saturate(170%);
+      border-bottom: 1px solid var(--ln);
+    }
+
+    .header-inner {
+      max-width: 1260px;
+      margin: auto;
+      padding: 12px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font: 800 18px Unbounded, sans-serif;
+      letter-spacing: -0.02em;
+      transition: transform 0.3s var(--bounce);
+    }
+
+    .brand:hover {
+      transform: scale(1.03);
+    }
+
+    .flag-chip {
+      width: 30px;
+      height: 19px;
+      border-radius: 5px;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: 1fr 2px 1fr 2px 1fr;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.28);
+    }
+
+    .flag-chip span:nth-child(1) { background: #0099b5; }
+    .flag-chip span:nth-child(2) { background: #ce1126; }
+    .flag-chip span:nth-child(3) { background: #ffffff; }
+    .flag-chip span:nth-child(4) { background: #ce1126; }
+    .flag-chip span:nth-child(5) { background: #1eb53a; }
+
+    nav {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      padding: 8px 14px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--mu);
+      transition: all 0.25s var(--bounce);
+    }
+
+    nav a:hover {
+      color: var(--tx);
+      background: rgba(14, 165, 233, 0.11);
+      transform: translateY(-2px);
+    }
+
+    .theme-toggle {
+      padding: 8px 14px;
+      border-radius: 99px;
+      border: 1.5px solid var(--ln);
+      background: var(--sf);
+      color: var(--tx);
+      font: 700 13px Manrope, sans-serif;
+      cursor: pointer;
+      transition: all 0.25s var(--bounce);
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--ac);
+      transform: translateY(-2px);
+    }
+
+    /* Main konteyner */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1260px;
+      margin: auto;
+      padding: 28px 22px 84px;
+    }
+
+    /* Hero banner */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 32px;
+      padding: 52px 40px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.95fr;
+      gap: 32px;
+      align-items: center;
+      color: #fff;
+      background: linear-gradient(135deg, #07142b 0%, #0b3c69 52%, #92400e 100%);
+      box-shadow: var(--sh-lg);
+      animation: riseIn 0.85s var(--spring) both;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: clamp(28px, 4.5vw, 50px);
+      letter-spacing: -0.025em;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(90deg, #7dd3fc, #fde68a);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 17px;
+      max-width: 52ch;
+      margin: 0 0 24px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Shimmer effektli tugmalar */
+    .btn {
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 14px;
+      border: 0;
+      background: var(--ag);
+      color: #fff;
+      font: 700 15px Manrope, sans-serif;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(2, 132, 199, 0.32);
+      transition: transform 0.28s var(--bounce), box-shadow 0.3s ease, filter 0.25s ease;
+    }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 65%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transform: skewX(-22deg);
+      transition: left 0.65s ease;
+      pointer-events: none;
+    }
+
+    .btn:hover::after {
+      left: 140%;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(2, 132, 199, 0.42);
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    .btn.ghost {
+      background: rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(10px);
+      border: 1.5px solid rgba(255, 255, 255, 0.45);
+      box-shadow: none;
+    }
+
+    .hero-media {
+      position: relative;
+      z-index: 2;
+      animation: heroFloat 5.2s ease-in-out infinite;
+    }
+
+    .hero-media img {
+      width: 100%;
+      height: 330px;
+      object-fit: cover;
+      border-radius: 22px;
+      display: block;
+      border: 2px solid rgba(255, 255, 255, 0.28);
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45);
+    }
+
+    .hero-caption {
+      position: absolute;
+      bottom: 14px;
+      left: 14px;
+      right: 14px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.76);
+      backdrop-filter: blur(10px);
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    /* Yuguruvchi lenta */
+    .ticker {
+      margin-top: 20px;
+      overflow: hidden;
+      border-radius: 99px;
+      border: 1px solid var(--ln);
+      background: var(--sf);
+      box-shadow: var(--sh-sm);
+      padding: 10px 0;
+    }
+
+    .ticker-track {
+      display: flex;
+      width: max-content;
+      animation: tickerRun 28s linear infinite;
+    }
+
+    .ticker:hover .ticker-track {
+      animation-play-state: paused;
+    }
+
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 24px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--mu);
+      white-space: nowrap;
+    }
+
+    .ticker-item b {
+      color: var(--ac);
+    }
+
+    /* Statistika */
+    .stats {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .stat {
+      background: var(--sf);
+      border: 1px solid var(--ln);
+      border-radius: 22px;
+      padding: 20px 16px;
+      text-align: center;
+      box-shadow: var(--sh-sm);
+      transition: transform 0.35s var(--bounce), border-color 0.3s ease, box-shadow 0.35s ease;
+    }
+
+    .stat:hover {
+      transform: translateY(-6px);
+      border-color: var(--ac);
+      box-shadow: var(--sh-md);
+    }
+
+    .stat strong {
+      display: block;
+      font: 800 28px Unbounded, sans-serif;
+      background: var(--ag);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 4px;
+    }
+
+    .stat span {
+      color: var(--mu);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* Sarlavhalar va filtrlar */
+    .section-head {
+      margin: 48px 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .section-head h2 {
+      font-size: clamp(22px, 3vw, 30px);
+      letter-spacing: -0.02em;
+    }
+
+    .section-head h2::after {
+      content: "";
+      display: block;
+      width: 52px;
+      height: 4px;
+      border-radius: 99px;
+      background: var(--ag);
+      margin-top: 8px;
+      transition: width 0.35s var(--spring);
+    }
+
+    .section-head:hover h2::after {
+      width: 92px;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 9px 16px;
+      border-radius: 99px;
+      border: 1.5px solid var(--ln);
+      background: var(--sf);
+      color: var(--tx);
+      font: 700 13px Manrope, sans-serif;
+      cursor: pointer;
+      box-shadow: var(--sh-sm);
+      transition: all 0.25s var(--bounce);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--ac);
+      transform: translateY(-2px);
+    }
+
+    .filter-btn.active {
+      background: var(--ag);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 8px 20px rgba(2, 132, 199, 0.3);
+    }
+
+    /* Kartochkalar */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 22px;
+    }
+
+    .place-card {
+      background: var(--sf);
+      border: 1px solid var(--ln);
+      border-radius: 24px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--sh-sm);
+      transition: transform 0.42s var(--spring), box-shadow 0.42s var(--spring), border-color 0.3s ease;
+    }
+
+    .place-card:hover {
+      transform: translateY(-9px);
+      border-color: var(--ac);
+      box-shadow: var(--sh-lg);
+    }
+
+    .place-card.is-hidden {
+      display: none;
+    }
+
+    .place-img-wrap {
+      position: relative;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      background: var(--sf-2);
+    }
+
+    .place-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s var(--spring);
+    }
+
+    .place-card:hover .place-img-wrap img {
+      transform: scale(1.07);
+    }
+
+    .place-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 5px 12px;
+      border-radius: 99px;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .place-body {
+      padding: 18px 20px 20px;
+      display: grid;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .place-body h3 {
+      font-size: 17px;
+      transition: color 0.25s ease;
+    }
+
+    .place-card:hover .place-body h3 {
+      color: var(--ac);
+    }
+
+    .place-body p {
+      margin: 0;
+      color: var(--mu);
+      font-size: 14px;
+    }
+
+    .place-foot {
+      margin-top: auto;
+      padding-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .region-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--ac);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .detail-btn {
+      padding: 8px 14px;
+      border-radius: 11px;
+      border: 1.5px solid var(--ln);
+      background: transparent;
+      color: var(--tx);
+      font: 700 13px Manrope, sans-serif;
+      cursor: pointer;
+      transition: all 0.25s var(--bounce);
+    }
+
+    .detail-btn:hover {
+      background: var(--ag);
+      color: #fff;
+      border-color: transparent;
+      transform: translateY(-2px);
+    }
+
+    /* Viloyatlar yo'riqnomasi */
+    .regions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 18px;
+    }
+
+    .region-box {
+      background: var(--sf);
+      border: 1px solid var(--ln);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: var(--sh-sm);
+      transition: transform 0.35s var(--spring), border-color 0.3s ease, box-shadow 0.35s ease;
+    }
+
+    .region-box:hover {
+      transform: translateY(-6px);
+      border-color: var(--ac);
+      box-shadow: var(--sh-md);
+    }
+
+    .region-box .num {
+      display: inline-grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--ag);
+      color: #fff;
+      font: 800 15px Unbounded, sans-serif;
+      margin-bottom: 12px;
+    }
+
+    .region-box p {
+      margin: 8px 0 0;
+      color: var(--mu);
+      font-size: 14px;
+    }
+
+    /* Madaniyat galereyasi */
+    .culture-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .culture-card {
+      background: var(--sf);
+      border: 1px solid var(--ln);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--sh-sm);
+      transition: transform 0.4s var(--spring), border-color 0.3s ease, box-shadow 0.4s ease;
+    }
+
+    .culture-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--ac2);
+      box-shadow: var(--sh-md);
+    }
+
+    .culture-card img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .culture-card-body {
+      padding: 18px 20px 22px;
+    }
+
+    .culture-card-body h3 {
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .culture-card-body p {
+      margin: 0;
+      color: var(--mu);
+      font-size: 14px;
+    }
+
+    /* Safar rejalashtiruvchi */
+    .planner-panel {
+      margin-top: 48px;
+      background: var(--sf);
+      border: 1px solid var(--ln);
+      border-radius: 30px;
+      padding: 34px;
+      box-shadow: var(--sh-md);
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .form-two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1.5px solid var(--ln);
+      background: var(--bg);
+      color: var(--tx);
+      font: inherit;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--ac);
+      background: var(--sf);
+      box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.16);
+    }
+
+    .plan-output {
+      margin-top: 10px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: rgba(14, 165, 233, 0.11);
+      border: 1px solid var(--ac);
+      font-size: 14px;
+      font-weight: 600;
+      display: none;
+      animation: riseIn 0.4s var(--spring) both;
+    }
+
+    .plan-output.show {
+      display: block;
+    }
+
+    /* Dialog modal */
+    dialog {
+      margin: auto;
+      max-width: 580px;
+      width: calc(100% - 32px);
+      border: 1px solid var(--ln);
+      border-radius: 26px;
+      padding: 0;
+      overflow: hidden;
+      background: var(--sf);
+      color: var(--tx);
+      box-shadow: 0 32px 72px rgba(0, 0, 0, 0.45);
+      animation: modalZoom 0.38s var(--bounce) both;
+    }
+
+    dialog::backdrop {
+      background: rgba(6, 10, 21, 0.68);
+      backdrop-filter: blur(8px);
+    }
+
+    .dlg-img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .dlg-body {
+      padding: 22px 24px 24px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .dlg-body p {
+      margin: 0;
+      color: var(--mu);
+    }
+
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--ln);
+      padding: 28px 22px;
+      text-align: center;
+      color: var(--mu);
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 36px 24px;
+      }
+
+      .hero-media {
+        order: -1;
+      }
+
+      .hero-media img {
+        height: 230px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .planner-panel {
+        grid-template-columns: 1fr;
+        padding: 24px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .form-two {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+      .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Suzuvchi yorug'lik nurlari -->
+  <div class="bg-mesh" aria-hidden="true">
+    <div class="glow-orb glow-1"></div>
+    <div class="glow-orb glow-2"></div>
+    <div class="glow-orb glow-3"></div>
+  </div>
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- Yuqori navigatsiya paneli -->
+  <header>
+    <div class="header-inner">
+      <a class="brand" href="#top">
+        <span class="flag-chip" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </span>
+        O‘ZBEKISTON
+      </a>
+      <nav aria-label="Asosiy menyu">
+        <a href="#manzillar">Manzillar</a>
+        <a href="#hududlar">Hududlar</a>
+        <a href="#madaniyat">Madaniyat</a>
+        <a href="#safar">Safar rejasi</a>
+        <a href="#savollar">Savollar</a>
+      </nav>
+      <div class="header-controls" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <input type="search" id="placeSearch" placeholder="Manzil qidirish..." aria-label="Manzillarni qidirish" style="width:190px;padding:8px 13px;border-radius:99px;font-size:13px;">
+        <button class="theme-toggle" id="themeToggle" type="button">☾ Tungi rejim</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero bo'limi -->
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="kicker"><span style="width:8px;height:8px;border-radius:50%;background:#fde68a;display:inline-block;animation:pulseDot 2s infinite;"></span> Markaziy Osiyo · Buyuk Ipak Yo‘li</div>
+        <h1><span>O‘zbekiston</span> — tarix, madaniyat, tabiat, san’at va kelajak</h1>
+        <p>Qadimiy shaharlarning ulug‘vor me’morchiligi, keng cho‘l va qoyali tog‘ manzaralari, xalq amaliy san’ati, musiqiy merosi hamda zamonaviy sayohat imkoniyatlari bir sahifada.</p>
+        <div class="btn-row">
+          <a class="btn" href="#manzillar">Manzillarni ko‘rish</a>
+          <a class="btn ghost" href="#safar">Marshrut tuzish</a>
+        </div>
+      </div>
+      <div class="hero-media">
+        <img src="https://images.pexels.com/photos/2704910/pexels-photo-2704910.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Xiva Ichan-Qal’a minoralari va tarixiy devorlari">
+        <div class="hero-caption">🏛 Xiva — Ichan-Qal’a minoralari · Qadimiy sharq me’morchiligi</div>
+      </div>
+    </section>
+
+    <!-- Yuguruvchi lenta -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span class="ticker-item"><b>XIVA</b> · Ichan-Qal’a minoralari va qal’a devorlari</span>
+        <span class="ticker-item"><b>SAMARQAND</b> · Tarixiy gumbazlar va koshin naqshlari</span>
+        <span class="ticker-item"><b>BUXORO</b> · Rang-barang koshinlar va qadimiy me’morchilik</span>
+        <span class="ticker-item"><b>TOSHKENT</b> · Yashil gumbazlar va zamonaviy shahar muhiti</span>
+        <span class="ticker-item"><b>CHO‘L VA TOG‘</b> · Keng kengliklar va uzoq cho‘qqilar</span>
+        <span class="ticker-item"><b>HUNARMANDCHILIK</b> · Madrasa rastalari va milliy buyumlar</span>
+        <span class="ticker-item"><b>XIVA</b> · Ichan-Qal’a minoralari va qal’a devorlari</span>
+        <span class="ticker-item"><b>SAMARQAND</b> · Tarixiy gumbazlar va koshin naqshlari</span>
+        <span class="ticker-item"><b>BUXORO</b> · Rang-barang koshinlar va qadimiy me’morchilik</span>
+        <span class="ticker-item"><b>TOSHKENT</b> · Yashil gumbazlar va zamonaviy shahar muhiti</span>
+      </div>
+    </div>
+
+    <!-- 4 ta ko'rsatkich -->
+    <section class="stats reveal" aria-label="Asosiy ma’lumotlar">
+      <div class="stat"><strong>12 + 1</strong><span>Viloyat va Qoraqalpog‘iston</span></div>
+      <div class="stat"><strong>4000+</strong><span>Tarixiy va madaniy obyekt</span></div>
+      <div class="stat"><strong>4 fasl</strong><span>Turli sayohat va tabiat manzarasi</span></div>
+      <div class="stat"><strong>UNESCO</strong><span>Jahon merosi shaharlari</span></div>
+    </section>
+
+    <!-- Mashhur manzillar va landshaftlar -->
+    <section id="manzillar" class="reveal">
+      <div class="section-head">
+        <h2>Mashhur manzillar va landshaftlar</h2>
+        <div class="filter-bar" role="group" aria-label="Yo‘nalish bo‘yicha filtrlash">
+          <button class="filter-btn active" data-filter="all" type="button">Barchasi</button>
+          <button class="filter-btn" data-filter="tarix" type="button">Tarixiy obidalar</button>
+          <button class="filter-btn" data-filter="tabiat" type="button">Tabiat va tog‘lar</button>
+          <button class="filter-btn" data-filter="madaniyat" type="button">Bozor va madaniyat</button>
+        </div>
+      </div>
+
+      <div class="cards-grid" id="placesGrid">
+        <article class="place-card" data-cat="tarix" data-title="Xiva — Ichan-Qal’a minoralari" data-region="Xorazm viloyati" data-tip="Ertalab yoki quyosh botishiga yaqin vaqtda qal’a devorlari bo‘ylab sayr qilish qulay." data-img="https://images.pexels.com/photos/2704910/pexels-photo-2704910.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" data-desc="Qadimiy qal’a devorlari, minoralari va naqshin madrasalari bilan ajralib turuvchi tarixiy shahar markazi. Ichan-Qal’a ichki devorlari tarixiy mudofaa va shaharsozlik an’analarini namoyon etadi.">
+          <div class="place-img-wrap">
+            <img src="https://images.pexels.com/photos/2704910/pexels-photo-2704910.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Xiva — Ichan-Qal’a minoralari" loading="lazy">
+            <span class="place-badge">Tarixiy obidalar</span>
+          </div>
+          <div class="place-body">
+            <h3>Xiva — Ichan-Qal’a minoralari</h3>
+            <p>Qadimiy qal’a devorlari va minoralari bilan tanilgan tarixiy shahar majmuasi.</p>
+            <div class="place-foot">
+              <span class="region-label">Xorazm</span>
+              <button class="detail-btn" type="button">Batafsil</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="place-card" data-cat="madaniyat" data-title="Ichan-Qal’a rastalari va madrasa" data-region="Xorazm viloyati" data-tip="Ustaxona va rastalarda mahalliy hunarmandlar bilan suhbatlashish va milliy buyumlarni ko‘rish mumkin." data-img="https://images.pexels.com/photos/19473601/pexels-photo-19473601/free-photo-of-market-stalls-in-front-of-the-mohammed-amin-khan-madrassah-in-khiva-uzbekistan" data-desc="Madrasa qarshisidagi hunarmandchilik rastalari, milliy buyumlar va tarixiy savdo muhiti. Bu yerda an’anaviy bezaklar, yog‘och va mato buyumlari tarixiy muhit bilan uyg‘unlashadi.">
+          <div class="place-img-wrap">
+            <img src="https://images.pexels.com/photos/19473601/pexels-photo-19473601/free-photo-of-market-stalls-in-front-of-the-mohammed-amin-khan-madrassah-in-khiva-uzbekistan" alt="Ichan-Qal’a rastalari va madrasa" loading="lazy">
+            <span class="place-badge">Madaniyat va bozor</span>
+          </div>
+          <div class="place-body">
+            <h3>Ichan-Qal’a rastalari va madrasa</h3>
+            <p>Madrasa qarshisidagi an’anaviy rastalar, milliy buyumlar va hunarmandchilik muhiti.</p>
+            <div class="place-foot">
+              <span class="region-label">Xiva</span>
+              <button class="detail-btn" type="button">Batafsil</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="place-card" data-cat="tarix" data-title="Samarqand tarixiy gumbazi" data-region="Samarqand viloyati" data-tip="Musaffo osmon fonida gumbaz koshinlari va geometrik bezaklar aniq ko‘rinadi." data-img="https://images.pexels.com/photos/40483697/pexels-photo-40483697.jpeg" data-desc="Samarqand me’morchiligiga xos nafis koshin bezaklari, gumbaz uyg‘unligi va tarixiy san’at an’analari.">
+          <div class="place-img-wrap">
+            <img src="https://images.pexels.com/photos/40483697/pexels-photo-40483697.jpeg" alt="Samarqand tarixiy gumbazi" loading="lazy">
+            <span class="place-badge">Tarixiy obidalar</span>
+          </div>
+          <div class="place-body">
+            <h3>Samarqand tarixiy gumbazi</h3>
+            <p>Musaffo osmon ostidagi nafis koshinli gumbaz va sharqona me’moriy bezaklar.</p>
+            <div class="place-foot">
+              <span class="region-label">Samarqand</span>
+              <button class="detail-btn" type="button">Batafsil</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="place-card" data-cat="tarix" data-title="Buxoro koshinli naqshlari" data-region="Buxoro viloyati" data-tip="Koshin va naqsh detallarini yaqindan ko‘rish uchun tabiiy kunduzgi yorug‘lik qulay." data-img="https://images.pexels.com/photos/39663601/pexels-photo-39663601.jpeg" data-desc="Buxoro me’morchiligidagi rang-barang koshinlar, takrorlanuvchi geometrik naqshlar va tarixiy bezak san’ati.">
+          <div class="place-img-wrap">
+            <img src="https://images.pexels.com/photos/39663601/pexels-photo-39663601.jpeg" alt="Buxoro koshinli naqshlari" loading="lazy">
+            <span class="place-badge">Tarixiy obidalar</span>
+          </div>
+          <div class="place-body">
+            <h3>Buxoro koshinli naqshlari</h3>
+            <p>Rang-barang koshinlar va an’anaviy sharqona naqshlar uyg‘unligi.</p>
+            <div class="place-foot">
+              <span class="region-label">Buxoro</span>
+              <button class="detail-btn" type="button">Batafsil</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="place-card" data-cat="tarix" data-title="Toshkent yashil gumbazli me’morchiligi" data-region="Toshkent shahri" data-tip="Zamonaviy poytaxt muhiti bilan uyg‘unlashgan an’anaviy me’moriy obidalarni ertalab ko‘rish qulay." data-img="https://images.pexels.com/photos/40483647/pexels-photo-40483647.jpeg" data-desc="Toshkent shahridagi yashil gumbazli me’moriy inshoot, nozik bezaklar va poytaxtning madaniy qiyofasi.">
+          <div class="place-img-wrap">
+            <img src="https://images.pexels.com/photos/40483647/pexels-photo-40483647.jpeg" alt="Toshkent yashil gumbazli me’morchiligi" loading="lazy">
+            <span class="place-badge">Tarixiy obidalar</span>
+          </div>
+          <div class="place-body">
+            <h3>Toshkent yashil gumbazli me’morchiligi</h3>
+            <p>Yashil gumbaz va an’anaviy bezak elementlari uyg‘unlashgan poytaxt me’morchiligi.</p>
+            <div class="place-foot">
+              <span class="region-label">Toshkent</span>
+              <button class="detail-btn" type="button">Batafsil</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="place-card" data-cat="tabiat" data-title="Cho‘l kengliklari va uzoq tog‘ cho‘qqilari" data-region="Cho‘l va tog‘ landshafti" data-tip="Keng kengliklar va uzoq ufqlarni kuzatishda quyoshdan himoya vositalari va suv oling." data-img="https://images.pexels.com/photos/4596487/pexels-photo-4596487.jpeg" data-desc="Keng cho‘l landshafti va ufqda ko‘rinib turuvchi tog‘ cho‘qqilari — Markaziy Osiyo tabiatining kenglik va sokinlik manzarasi.">
+          <div class="place-img-wrap">
+            <img src="https://images.pexels.com/photos/4596487/pexels-photo-4596487.jpeg" alt="Cho‘l kengliklari va uzoq tog‘ cho‘qqilari" loading="lazy">
+            <span class="place-badge">Tabiat va tog‘lar</span>
+          </div>
+          <div class="place-body">
+            <h3>Cho‘l kengliklari va uzoq tog‘ cho‘qqilari</h3>
+            <p>Keng cho‘l kengliklari va uzoq tog‘ cho‘qqilari tutashgan tabiiy manzara.</p>
+            <div class="place-foot">
+              <span class="region-label">Tabiat landshafti</span>
+              <button class="detail-btn" type="button">Batafsil</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="place-card" data-cat="tarix" data-title="Ichan-Qal’a qadimiy shahar ko‘rinishi" data-region="Xorazm viloyati (Xiva)" data-tip="Qadimiy shahar devorlari va minoralarini kuzatish uchun Xiva bo‘ylab piyoda sayohat eng qulay usul." data-img="https://images.pexels.com/photos/35375809/pexels-photo-35375809.jpeg" data-desc="Xiva Ichan-Qal’asining qadimiy me’moriy ko‘rinishi, tarixiy devorlar va an’anaviy sharqona shahar muhiti.">
+          <div class="place-img-wrap">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQigqvvrkVRjGZWWORuF3I1ewGUWfLtXK5vmFPMtf3uuPi2e6kk0FALe6w&s=10" alt="Ichan-Qal’a qadimiy shahar ko‘rinishi" loading="lazy">
+            <span class="place-badge">Tarixiy obidalar</span>
+          </div>
+          <div class="place-body">
+            <h3>Ichan-Qal’a qadimiy shahar ko‘rinishi</h3>
+            <p>Xiva Ichan-Qal’asining qadimiy me’moriy ko‘rinishi va tarixiy muhiti.</p>
+            <div class="place-foot">
+              <span class="region-label">Xiva — Ichan-Qal’a</span>
+              <button class="detail-btn" type="button">Batafsil</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="place-card" data-cat="madaniyat" data-title="Naqshin gumbaz va me’moriy san’at" data-region="Madaniy va me’moriy meros" data-tip="Gumbaz ichki va tashqi bezaklaridagi nozik geometrik chiziqlar xalq ustalari mahoratini ko‘rsatadi." data-img="https://images.pexels.com/photos/32055841/pexels-photo-32055841.jpeg" data-desc="Murakkab geometrik bezakli gumbaz me’morchiligi — an’anaviy bezak san’ati va me’moriy madaniyat namunasi.">
+          <div class="place-img-wrap">
+            <img src="https://images.pexels.com/photos/32055841/pexels-photo-32055841.jpeg" alt="Naqshin gumbaz va me’moriy san’at" loading="lazy">
+            <span class="place-badge">Madaniyat va bozor</span>
+          </div>
+          <div class="place-body">
+            <h3>Naqshin gumbaz va me’moriy san’at</h3>
+            <p>Murakkab geometrik bezakli gumbaz va an’anaviy me’moriy san’at.</p>
+            <div class="place-foot">
+              <span class="region-label">Me’moriy san’at</span>
+              <button class="detail-btn" type="button">Batafsil</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Geometrik naqshin SVG ajratgich -->
+    <div style="margin:42px auto 6px;display:flex;justify-content:center;align-items:center;gap:14px;" aria-hidden="true">
+      <span style="height:1px;flex:1;max-width:220px;background:var(--ln);"></span>
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none" style="animation:ornamentSpin 9s ease-in-out infinite;">
+        <rect x="11" y="11" width="22" height="22" rx="4" stroke="url(#uzGrad)" stroke-width="2.2"/>
+        <rect x="11" y="11" width="22" height="22" rx="4" transform="rotate(45 22 22)" stroke="url(#uzGrad)" stroke-width="2.2"/>
+        <circle cx="22" cy="22" r="4" fill="url(#uzGrad)"/>
+        <defs>
+          <linearGradient id="uzGrad" x1="4" y1="4" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#0284c7"/>
+            <stop offset="1" stop-color="#f59e0b"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span style="height:1px;flex:1;max-width:220px;background:var(--ln);"></span>
+    </div>
+
+    <!-- Kengaytirilgan 8 ta hudud yo'riqnomasi -->
+    <section id="hududlar" class="reveal">
+      <div class="section-head">
+        <h2>Hududlar yo‘riqnomasi (12 + 1)</h2>
+      </div>
+      <div class="regions-grid">
+        <div class="region-box">
+          <div class="num">01</div>
+          <h3>Samarqand viloyati</h3>
+          <p>Buyuk Ipak Yo‘lining markaziy shaharlaridan biri, ulkan tarixiy maydonlar, madrasalar va ilmiy-madaniy an’analar maskani.</p>
+        </div>
+        <div class="region-box">
+          <div class="num">02</div>
+          <h3>Buxoro viloyati</h3>
+          <p>Qadimiy madrasa va minoralar, tarixiy ark, karvonsaroylar hamda zardo‘zlik va misgarlik an’analari bilan mashhur hudud.</p>
+        </div>
+        <div class="region-box">
+          <div class="num">03</div>
+          <h3>Xorazm viloyati (Xiva)</h3>
+          <p>Ichan-Qal’a tarixiy majmuasi, minoralar, qal’a devorlari va o‘ziga xos Xorazm madaniy merosi bilan ajralib turadi.</p>
+        </div>
+        <div class="region-box">
+          <div class="num">04</div>
+          <h3>Toshkent shahri va viloyati</h3>
+          <p>Zamonaviy poytaxt muhiti, madaniy markazlar, istirohat bog‘lari hamda yaqin atrofdagi tog‘ va dam olish maskanlari.</p>
+        </div>
+        <div class="region-box">
+          <div class="num">05</div>
+          <h3>Farg‘ona vodiysi</h3>
+          <p>Farg‘ona, Andijon va Namangan hududlari kulolchilik, atlas-adras to‘qish, pichoqchilik va serhosil bog‘dorchilik an’analari bilan tanilgan.</p>
+        </div>
+        <div class="region-box">
+          <div class="num">06</div>
+          <h3>Qashqadaryo va Surxondaryo</h3>
+          <p>Janubiy hududlarning boy tarixiy qatlamlari, tog‘ daralari, qadimiy shaharlar izlari va o‘ziga xos tabiiy xilma-xilligi.</p>
+        </div>
+        <div class="region-box">
+          <div class="num">07</div>
+          <h3>Navoiy va Jizzax</h3>
+          <p>Keng cho‘l va yarim cho‘l hududlari, tog‘ yonbag‘irlari, tarixiy karvon yo‘llari va ekoturizm yo‘nalishlari.</p>
+        </div>
+        <div class="region-box">
+          <div class="num">08</div>
+          <h3>Qoraqalpog‘iston Respublikasi</h3>
+          <p>Keng ufqlar, noyob tabiiy landshaftlar, madaniy meros va tarixiy yodgorliklari bilan o‘ziga xos hudud.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Madaniyat, san'at va an'analar bo'limi -->
+    <section id="madaniyat" class="reveal">
+      <div class="section-head">
+        <h2>Madaniyat, hunarmandchilik va an’analar</h2>
+      </div>
+      <div class="culture-grid">
+        <article class="culture-card">
+          <img src="https://uzbekistan.travel/storage/app/media/Rasmlar/Xorazm/cropped-images/2079897013-0-0-0-0-1738669626.jpg" alt="Xiva madrasasi oldidagi hunarmandchilik rastalari" loading="lazy">
+          <div class="culture-card-body">
+            <h3>Hunarmandchilik va rastalar</h3>
+            <p>Madrasa rastalari, yog‘och o‘ymakorligi, kulolchilik va milliy buyumlar xalq amaliy san’ati an’analarini saqlab kelmoqda.</p>
+          </div>
+        </article>
+        <article class="culture-card">
+          <img src="https://images.pexels.com/photos/39663601/pexels-photo-39663601.jpeg" alt="Buxoro uslubidagi koshin va bezak naqshlari" loading="lazy">
+          <div class="culture-card-body">
+            <h3>Koshin va naqqoshlik san’ati</h3>
+            <p>Rang-barang koshinlar va geometrik bezaklar sharqona badiiy did va ustalar mahoratini ifodalaydi.</p>
+          </div>
+        </article>
+        <article class="culture-card">
+          <img src="https://images.pexels.com/photos/40483697/pexels-photo-40483697.jpeg" alt="Tarixiy me’moriy gumbaz va madaniy meros" loading="lazy">
+          <div class="culture-card-body">
+            <h3>Me’moriy meros va qadriyatlar</h3>
+            <p>Tarixiy gumbazlar va madaniy markazlar xalqimizning boy tarixiy xotirasi hamda mehmondo‘stlik an’analarini namoyon etadi.</p>
+          </div>
+        </article>
+        <article class="culture-card">
+          <img src="https://images.pexels.com/photos/4596487/pexels-photo-4596487.jpeg" alt="Keng cho‘l va tog‘ ufqlari manzarasi" loading="lazy">
+          <div class="culture-card-body">
+            <h3>Keng cho‘l va tabiat ufqlari</h3>
+            <p>Keng kengliklar va uzoq tog‘ cho‘qqilari tabiat bilan uyg‘unlik, sokinlik va sayohat ilhomini beradi.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- San'at, musiqa va an'analar bo'limi -->
+    <section id="sanat" class="reveal">
+      <div class="section-head">
+        <h2>San’at, musiqa va an’analar</h2>
+      </div>
+      <div class="regions-grid">
+        <div class="region-box">
+          <div class="num">♪</div>
+          <h3>Maqom va xalq musiqasi</h3>
+          <p>Shashmaqom, katta ashula, dostonchilik va milliy cholg‘ular (dutor, tanbur, doira, chang, rubob) boy musiqiy merosni tashkil etadi.</p>
+        </div>
+        <div class="region-box">
+          <div class="num">✦</div>
+          <h3>Amaliy san’at va naqsh</h3>
+          <p>Kulolchilik, yog‘och o‘ymakorligi, zardo‘zlik, kashtachilik va miniatyura san’ati milliy bezak madaniyatini boyitadi.</p>
+        </div>
+        <div class="region-box">
+          <div class="num">☀</div>
+          <h3>Milliy bayramlar va urf-odatlar</h3>
+          <p>Navro‘z, sumalak, xalq sayllari, mehmondo‘stlik va oilaviy qadriyatlar avlodlar o‘rtasida davom etib kelmoqda.</p>
+        </div>
+        <div class="region-box">
+          <div class="num">🍲</div>
+          <h3>Dasturxon va pazandalik</h3>
+          <p>Har bir hududning o‘ziga xos palov tayyorlash uslublari, non yopish an’analari, somsa, lag‘mon va choyxona madaniyati.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Foydali ma'lumotlar va savollar (FAQ) -->
+    <section id="savollar" class="reveal">
+      <div class="section-head">
+        <h2>Foydali ma’lumotlar va savollar (FAQ)</h2>
+      </div>
+      <div style="display:grid;gap:12px;">
+        <details style="background:var(--sf);border:1px solid var(--ln);border-radius:18px;padding:16px 20px;box-shadow:var(--sh-sm);">
+          <summary style="font-weight:800;cursor:pointer;">Sayohat qilish uchun eng qulay fasl qaysi?</summary>
+          <p style="margin:10px 0 0;color:var(--mu);">Bahor (mart–may) va kuz (sentyabr–noyabr) oylarida ob-havo mo‘tadil bo‘lib, tarixiy shaharlar va tabiat manzaralarini ko‘rish uchun juda qulay. Tog‘li hududlarga yozda ham, qishda ham mavsumiy maqsadga ko‘ra borish mumkin.</p>
+        </details>
+        <details style="background:var(--sf);border:1px solid var(--ln);border-radius:18px;padding:16px 20px;box-shadow:var(--sh-sm);">
+          <summary style="font-weight:800;cursor:pointer;">Shaharlararo harakatlanish qanday tashkil etiladi?</summary>
+          <p style="margin:10px 0 0;color:var(--mu);">Asosiy shaharlar o‘rtasida tezyurar va shaharlararo poyezdlar, avtobuslar, ichki aviaqatnovlar hamda avtomobil sayohatlari mavjud.</p>
+        </details>
+        <details style="background:var(--sf);border:1px solid var(--ln);border-radius:18px;padding:16px 20px;box-shadow:var(--sh-sm);">
+          <summary style="font-weight:800;cursor:pointer;">Tarixiy obidalar va mahalliy madaniyatga hurmat qoidalari qanday?</summary>
+          <p style="margin:10px 0 0;color:var(--mu);">Yodgorliklarni asrash, belgilanmagan joylarga chiqmaslik, suratga olish qoidalariga rioya qilish va mahalliy an’analarga hurmat bilan munosabatda bo‘lish tavsiya etiladi.</p>
+        </details>
+        <details style="background:var(--sf);border:1px solid var(--ln);border-radius:18px;padding:16px 20px;box-shadow:var(--sh-sm);">
+          <summary style="font-weight:800;cursor:pointer;">Marshrutga manzillarni qanday qo‘shish mumkin?</summary>
+          <p style="margin:10px 0 0;color:var(--mu);">“Mashhur manzillar va landshaftlar” bo‘limidagi istalgan kartochkaning “Batafsil” tugmasini bosing va ochilgan oynada “Marshrutga qo‘shish” tugmasini tanlang.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- Safar rejalashtiruvchi -->
+    <section id="safar" class="planner-panel reveal">
+      <div>
+        <div class="kicker" style="background:rgba(2,132,199,0.12);color:var(--ac);border-color:rgba(2,132,199,0.25)">✦ Marshrut tuzuvchi</div>
+        <h2 style="font-size:24px;margin-bottom:10px">Safar rejangizni shakllantiring</h2>
+        <p style="color:var(--mu);margin:0 0 14px;">Yo‘nalish, kunlar soni va qiziqishlaringizni kiriting — shuningdek, kartochkalardan tanlangan manzillarni ham qo‘shib, kunma-kun reja hosil qiling.</p>
+        <div style="background:var(--sf-2);border:1px solid var(--ln);border-radius:16px;padding:14px 16px;">
+          <div style="font-weight:800;font-size:13px;color:var(--ac);margin-bottom:8px;">TANLANGAN MANZILLAR (<span id="selectedCount">0</span>)</div>
+          <ul id="selectedPlacesList" style="margin:0;padding-left:18px;color:var(--mu);font-size:14px;">
+            <li>Hali manzil tanlanmagan. “Batafsil” oynasi orqali qo‘shishingiz mumkin.</li>
+          </ul>
+        </div>
+      </div>
+
+      <form id="planForm">
+        <div class="form-two">
+          <label>Ismingiz
+            <input type="text" id="pName" placeholder="Masalan: Jasur" required>
+          </label>
+          <label>Yo‘nalish
+            <select id="pRoute">
+              <option value="Tarixiy shaharlar va me’morchilik (Xiva, Samarqand, Buxoro)">Tarixiy shaharlar va me’morchilik (Xiva, Samarqand, Buxoro)</option>
+              <option value="Tabiat, cho‘l va tog‘ sayohati">Tabiat, cho‘l va tog‘ sayohati</option>
+              <option value="Hunarmandchilik, san’at va madaniyat turi">Hunarmandchilik, san’at va madaniyat turi</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-two">
+          <label>Safar davomiyligi (kun)
+            <input type="number" id="pDays" min="1" max="30" value="5" required>
+          </label>
+          <label>Mavsum
+            <select id="pSeason">
+              <option value="Bahor">Bahor</option>
+              <option value="Yoz">Yoz</option>
+              <option value="Kuz">Kuz</option>
+              <option value="Qish">Qish</option>
+            </select>
+          </label>
+        </div>
+        <label>Qo‘shimcha tilaklar yoki diqqat markazi
+          <textarea id="pNote" rows="2" placeholder="Masalan: oilaviy sayohat, foto-sayr, hunarmandchilik ustaxonalari..."></textarea>
+        </label>
+        <div class="btn-row">
+          <button class="btn" type="submit">Rejani yaratish</button>
+          <button class="btn ghost" id="clearSelectedBtn" type="button" style="color:var(--tx);border-color:var(--ln);">Tanlanganlarni tozalash</button>
+        </div>
+        <div class="plan-output" id="planOutput" role="status" aria-live="polite"></div>
+      </form>
+    </section>
+  </main>
+
+  <!-- Batafsil modal oynasi -->
+  <dialog id="placeModal">
+    <img class="dlg-img" id="modalImg" src="" alt="">
+    <div class="dlg-body">
+      <span class="region-label" id="modalRegion"></span>
+      <h3 id="modalTitle" style="font-size:20px"></h3>
+      <p id="modalDesc"></p>
+      <p id="modalTip" style="font-size:13px;color:var(--ac);font-weight:700;"></p>
+      <div style="margin-top:10px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+        <button class="btn" id="addToRouteBtn" type="button">Marshrutga qo‘shish</button>
+        <button class="btn ghost" id="closeModal" type="button" style="color:var(--tx);border-color:var(--ln);">Yopish</button>
+      </div>
+    </div>
+  </dialog>
+
+  <footer>
+    O‘zbekiston — Tarix, Madaniyat, Tabiat, San’at va Kelajak · Axborot, madaniyat va sayohat portali
+  </footer>
+
+  <script>
+    (function () {
+      try {
+        // Yorug' va tungi mavzuni almashtirish
+        const themeToggle = document.getElementById("themeToggle");
+        themeToggle?.addEventListener("click", () => {
+          const dark = document.body.classList.toggle("dark");
+          themeToggle.textContent = dark ? "☀ Yorug‘ rejim" : "☾ Tungi rejim";
+        });
+
+        // Kategoriya filtri va qidiruv
+        const filterBtns = document.querySelectorAll(".filter-btn");
+        const placeCards = document.querySelectorAll("#placesGrid .place-card");
+        const placeSearch = document.getElementById("placeSearch");
+        let activeCategory = "all";
+
+        function applyFilters() {
+          const query = (placeSearch?.value || "").trim().toLowerCase();
+          placeCards.forEach((card) => {
+            const matchesCat = activeCategory === "all" || card.dataset.cat === activeCategory;
+            const textBlob = `${card.dataset.title || ""} ${card.dataset.region || ""} ${card.dataset.desc || ""}`.toLowerCase();
+            const matchesQuery = !query || textBlob.includes(query);
+            card.classList.toggle("is-hidden", !(matchesCat && matchesQuery));
+          });
+        }
+
+        filterBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            filterBtns.forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            activeCategory = btn.dataset.filter || "all";
+            applyFilters();
+          });
+        });
+
+        placeSearch?.addEventListener("input", applyFilters);
+
+        // Batafsil modal oynani ochish, yopish va marshrutga qo'shish
+        const modal = document.getElementById("placeModal");
+        const modalImg = document.getElementById("modalImg");
+        const modalRegion = document.getElementById("modalRegion");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalDesc = document.getElementById("modalDesc");
+        const modalTip = document.getElementById("modalTip");
+        const closeModal = document.getElementById("closeModal");
+        const addToRouteBtn = document.getElementById("addToRouteBtn");
+        const selectedPlacesList = document.getElementById("selectedPlacesList");
+        const selectedCount = document.getElementById("selectedCount");
+        const clearSelectedBtn = document.getElementById("clearSelectedBtn");
+
+        let currentPlaceTitle = "";
+        const selectedPlaces = [];
+
+        function renderSelectedPlaces() {
+          if (selectedCount) selectedCount.textContent = String(selectedPlaces.length);
+          if (!selectedPlacesList) return;
+          if (selectedPlaces.length === 0) {
+            selectedPlacesList.innerHTML = "<li>Hali manzil tanlanmagan. “Batafsil” oynasi orqali qo‘shishingiz mumkin.</li>";
+            return;
+          }
+          selectedPlacesList.innerHTML = selectedPlaces
+            .map((item) => `<li>${item}</li>`)
+            .join("");
+        }
+
+        function closePlaceModal() {
+          if (!modal) return;
+          if (typeof modal.close === "function") {
+            modal.close();
+          } else {
+            modal.removeAttribute("open");
+          }
+        }
+
+        placeCards.forEach((card) => {
+          card.querySelector(".detail-btn")?.addEventListener("click", () => {
+            currentPlaceTitle = card.dataset.title || "";
+            if (modalImg) {
+              modalImg.src = card.dataset.img || "";
+              modalImg.alt = currentPlaceTitle;
+            }
+            if (modalRegion) modalRegion.textContent = card.dataset.region || "";
+            if (modalTitle) modalTitle.textContent = currentPlaceTitle;
+            if (modalDesc) modalDesc.textContent = card.dataset.desc || "";
+            if (modalTip) modalTip.textContent = card.dataset.tip ? `Tavsiya: ${card.dataset.tip}` : "";
+            if (addToRouteBtn) {
+              addToRouteBtn.textContent = selectedPlaces.includes(currentPlaceTitle)
+                ? "Marshrutga qo‘shilgan ✓"
+                : "Marshrutga qo‘shish";
+            }
+            if (modal) {
+              if (typeof modal.showModal === "function") {
+                modal.showModal();
+              } else {
+                modal.setAttribute("open", "");
+              }
+            }
+          });
+        });
+
+        addToRouteBtn?.addEventListener("click", () => {
+          if (currentPlaceTitle && !selectedPlaces.includes(currentPlaceTitle)) {
+            selectedPlaces.push(currentPlaceTitle);
+            renderSelectedPlaces();
+          }
+          if (addToRouteBtn) addToRouteBtn.textContent = "Marshrutga qo‘shilgan ✓";
+        });
+
+        clearSelectedBtn?.addEventListener("click", () => {
+          selectedPlaces.length = 0;
+          renderSelectedPlaces();
+        });
+
+        closeModal?.addEventListener("click", closePlaceModal);
+        modal?.addEventListener("click", (e) => {
+          if (e.target === modal) closePlaceModal();
+        });
+
+        // Safar marshruti formasini qayta ishlash
+        const planForm = document.getElementById("planForm");
+        const planOutput = document.getElementById("planOutput");
+        planForm?.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const name = (document.getElementById("pName")?.value || "").trim() || "Mehmon";
+          const route = document.getElementById("pRoute")?.value || "Tarixiy shaharlar va me’morchilik (Xiva, Samarqand, Buxoro)";
+          const days = Math.max(1, Math.min(30, Number(document.getElementById("pDays")?.value || 5)));
+          const season = document.getElementById("pSeason")?.value || "Bahor";
+          const note = (document.getElementById("pNote")?.value || "").trim();
+          const placesPart = selectedPlaces.length
+            ? ` Tanlangan manzillar: ${selectedPlaces.join(", ")}.`
+            : "";
+
+          if (planOutput) {
+            planOutput.textContent = `${name}, ${season} mavsumida ${days} kunlik "${route}" marshruti bo‘yicha reja tayyorlandi.${placesPart}${note ? " Qo‘shimcha: " + note : ""}`;
+            planOutput.classList.add("show");
+          }
+        });
+
+        // Scroll-reveal animatsiyasi
+        const scrollProgress = document.getElementById("scrollProgress");
+        function updateScrollProgress() {
+          if (!scrollProgress) return;
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const pct = docHeight > 0 ? Math.min(100, Math.max(0, (window.scrollY / docHeight) * 100)) : 0;
+          scrollProgress.style.width = `${pct}%`;
+        }
+        window.addEventListener("scroll", updateScrollProgress, { passive: true });
+        updateScrollProgress();
+
+        const revealItems = document.querySelectorAll(".reveal");
+        if ("IntersectionObserver" in window) {
+          const io = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add("is-visible");
+                  io.unobserve(entry.target);
+                }
+              });
+            },
+            { threshold: 0.1 }
+          );
+          revealItems.forEach((el) => io.observe(el));
+        } else {
+          revealItems.forEach((el) => el.classList.add("is-visible"));
+        }
+      } catch (error) {
+        console.error("Sahifa ishlashida xatolik yuz berdi:", error);
+      }
+    })();
+  </script>
+</body>
+</html>
